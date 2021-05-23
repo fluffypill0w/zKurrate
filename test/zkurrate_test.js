@@ -3,7 +3,7 @@ const path = require("path");
 
 const tester = require("circom").tester;
 
-const bn128 = require("ffjavascript").bn128;
+const Fr = require("ffjavascript").bn128;
 
 const assert = chai.assert;
 
@@ -22,7 +22,7 @@ describe("My test", function () {
 
         const witness = await circuit.calculateWitness({ "inArray": ["104", "105"]}, true);
 
-        assert(bn128.eq(witness[0],bn128.e(1)));
+        assert(Fr.eq(witness[0],Fr.e(1)));
        // assert(witness[1] == "105");
     });
 });
