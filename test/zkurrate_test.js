@@ -3,7 +3,9 @@ const path = require("path");
 
 const tester = require("circom").tester;
 
-const Fr = require("ffjavascript").bn128;
+const curve = require("ffjavascript").bn128.buildBn128(false);
+
+const Fr = curve.Fr;
 
 const assert = chai.assert;
 
