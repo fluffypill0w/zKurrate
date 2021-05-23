@@ -20,6 +20,6 @@ describe("My test", function () {
         assert.equal(circuit.nVars, 10);
         assert.equal(circuit.constraints.length, 17);
 
-        const witness = await circuit.calculateWitness({ "inFirstByte": "104"}, true);
+        const witness = await circuit.calculateWitness({ "inArray": "104"}, true);
     });
 });

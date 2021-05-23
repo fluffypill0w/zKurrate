@@ -5,12 +5,12 @@ include "../../node_modules/circomlib/circuits/bitify.circom"; // TODO: remove?
 //var pubEmployerNameSignalSize = 16*8;
 
 template StringIsHello() {
-    signal input inFirstByte;
+    signal input inArray[1];
     signal output isHello;
     var n = 8;    
     
     component firstByteBits = Num2Bits(n);
-    firstByteBits.in <-- inFirstByte;    
+    firstByteBits.in <-- inArray[0];    
     var hChar = 104;
 
     component hBits = Num2Bits(n);
