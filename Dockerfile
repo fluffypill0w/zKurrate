@@ -47,7 +47,7 @@ WORKDIR /zkurrate
 
 COPY package.json .
 #COPY yarn.lock .
-COPY package-lock.json.npm .
+#COPY package-lock.json.npm .
 
 RUN yarn install
 
