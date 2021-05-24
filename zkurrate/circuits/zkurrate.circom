@@ -3,6 +3,8 @@ include "../../node_modules/circomlib/circuits/pedersen.circom";
 include "../../mastermind/circuits/pedersenhash.circom";
 include "../../node_modules/circomlib/circuits/bitify.circom";
 include "../../node_modules/circomlib/circuits/comparators.circom";
+include "../../node_modules/circomlib/circuits/eddsa.circom";
+
 
 /*
 template Main() {
@@ -84,7 +86,9 @@ template Main() {
 
     // Private inputs
     signal private input inEmployeeName;
-    signal private input inSignature;    
+
+    signal private input inSignatureLSB; // 0..32 bits
+    signal private input inSignatureMSB; // 32..64 bits
 
     // Output
     signal output amountIsValid;
@@ -96,11 +100,11 @@ template Main() {
 
     amountIsValid <== amountComparator.out;
 
-    var employerNameSize = 16*8;
+    var employerNameSize = 2*8;
     component employerNameBits = Num2Bits(employerNameSize);
     employerNameBits.in <== inEmployerName;
 
-    var employeeNameSize = 16*8;
+    var employeeNameSize = 2*8;
     component employeeNameBits = Num2Bits(employeeNameSize);
     employeeNameBits.in <== inEmployeeName;
 
@@ -109,52 +113,45 @@ template Main() {
     amountBits.in <== inAmount;
 
     var tupleSize = employerNameSize + employeeNameSize + amountSize;
-    component tupleBits = Bits2Num(tupleSize);
+    component tupleBits2Num = Bits2Num(tupleSize);
 
     var offset = 0;
     for (var i=0; i<employerNameSize; i++) {
-        tupleBits.in[i] <== employerNameBits.out[i];
+        tupleBits2Num.in[i] <== employerNameBits.out[i];
     }
     offset = offset + employerNameSize;
 
     for (var i=0; i<employeeNameSize; i++) {
-        tupleBits.in[offset + i] <== employeeNameBits.out[i];
+        tupleBits2Num.in[offset + i] <== employeeNameBits.out[i];
     }
     offset = offset + employeeNameSize;
 
     for (var i=0; i<amountSize; i++) {
-        tupleBits.in[offset + i] <== amountBits.out[i];
+        tupleBits2Num.in[offset + i] <== amountBits.out[i];
     }
 
+    signal tupleNum;
+    
+    tupleNum <== tupleBits2Num.out;
+
+    component msgBits = Num2Bits(tupleSize);
+    msgBits.in <== tupleNum;
+
+    component signatureABits = Num2Bits(256);
+    signatureABits.in <== inBankPublicKey;
+
+    component signatureR8Bits = Num2Bits(256);
+    signatureR8Bits.in <== inSignatureLSB;
+
+    component signatureSBits = Num2Bits(256);
+    signatureSBits.in <== inSignatureMSB;
 
     // check that the fintech transaction tuple is correcty signed
-    // TODO: checkSignature(pubFintechPublicSigningKey, privFintechTransactionTuple, privTransactionTupleSignature) === true
-    //// check that the fintech transaction tuple is correcty signed
-    //component babyCheck = BabyCheck();
-    //babyCheck.x <== pubAmountMin ;
-    //babyCheck.y <== out[1];
-
-    // Check that the fintech transaction tuple says the money comes from the company
-    //
-    // Verify that the hash of the private solution matches privFintechTransactionTupleEmployerNameHash
-    // via a constraint that the publicly declared solution hash matches the private solution witness
-    //
-    // The circuit to do it is:
-    //
-    //     pubEmployerName ===> in.[employerNameHashCircuit].encoded === privFintechTransactionTupleEmployerNameHash
-    //
-    //component employerNameHashCircuit = EmployerNameHash(pubEmployerNameSignalSize);
-    //employerNameHashCircuit.inEmployerName <== pubEmployerName;
-    //employerNameHashCircuit.outEncoded === privFintechTransactionTupleEmployerNameHash;
-
-    // Check that the fintech transaction tuple is related to the UserId
-    // TODO: getFintechTransactionUserNonce(privFintechTransactionTuple) === hash(pubUserId, privSalt)
-
-    // check that the amount is higher than range minimum
-    // TODO: isHigherThan(getFintechTransactionAmount(privFintechTransactionData), pubSalaryMin) === true
-    
-    // check that the amount is lower than range maximum
-    // TODO: isLowerThan(getFintechTransactionAmount(privFintechTransactionData), pubSalaryMax) === true
+    component signatureVerifier = EdDSAVerifier(tupleSize);
+    signatureVerifier.msg <== msgBits.out;         // tuple      (tupleSize bits)
+    signatureVerifier.A <== signatureABits.out;    // bank public key  (256 bits)
+    signatureVerifier.R8 <== signatureR8Bits.out;  // signature R part (256 bits)
+    signatureVerifier.S <== signatureSBits.out;    // signature S part (256 bits)
 }
 
 component main = Main();
