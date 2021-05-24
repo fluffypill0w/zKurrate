@@ -1,82 +1,6 @@
-//include "../../node_modules/circomlib/circuits/babyjub.circom";
-include "../../node_modules/circomlib/circuits/pedersen.circom";
-include "../../mastermind/circuits/pedersenhash.circom";
 include "../../node_modules/circomlib/circuits/bitify.circom";
 include "../../node_modules/circomlib/circuits/comparators.circom";
 include "../../node_modules/circomlib/circuits/eddsa.circom";
-
-
-/*
-template Main() {
-    signal input inArray;
-    signal output out;
-
-    signal aux;
-
-    var bytes = 2;
-    var n = 8*bytes;    
-
-    component inArrayBits = Num2Bits(n);
-    inArrayBits.in <== inArray;
-
-    var hChar = 104;
-    component hBits = Num2Bits(8);
-    hBits.in <== hChar;
-
-    var iChar = 105;
-    component iBits = Num2Bits(8);
-    iBits.in <== iChar;
-
-    for (var i=0; i<8; i++) {
-        inArrayBits.out[i+8*0] === hBits.out[i];
-    }
-
-    for (var i=0; i<8; i++) {
-        inArrayBits.out[i+8*1] === iBits.out[i];
-    }
-
-    aux <== inArray - 1;
-    out <== aux;
-}
-*/
-/*
-template EmployerNameHash(size) {
-    signal input inEmployerName;
-    signal output out[2];
-    signal output outEncoded;
-
-    component inBits = Num2Bits(size);
-    inBits.in <== inEmployerName;
-
-    component pedersen = Pedersen(size);
-    for (var i=0; i<size; i++) {
-        pedersen.in[i] <-- inBits.out[i];
-    }
-
-    out[0] <== pedersen.out[0];
-    out[1] <== pedersen.out[1];
-
-    component encoder = EncodePedersenPoint();
-    encoder.x <== pedersen.out[0];
-    encoder.y <== pedersen.out[1];
-
-    outEncoded <== encoder.out;
-}
-*/
-/* 
-template EmployerNameComparator(size) {
-    signal input pubEmployerName;
-    signal input privFintechTransactionTupleEmployerName;
-
-    component pubEmployerNameBits = Num2Bits(size);
-    pubEmployerNameBits.in <== pubEmployerName;
-
-    component privFintechTransactionTupleEmployerNameBits = Num2Bits(size);
-    privFintechTransactionTupleEmployerNameBits.in <== privFintechTransactionTupleEmployerName;
-
-    pubEmployerNameBits.out === privFintechTransactionTupleEmployerNameBits.out;
-}
-*/
 
 template Main() {
     // Public inputs
@@ -100,10 +24,13 @@ template Main() {
 
     amountIsValid <== amountComparator.out;
 
+    // Compose the tuple from the individual components
+
+    //// Transform components to their bit representations
     var employerNameSize = 2*8;
     component employerNameBits = Num2Bits(employerNameSize);
     employerNameBits.in <== inEmployerName;
-
+    
     var employeeNameSize = 2*8;
     component employeeNameBits = Num2Bits(employeeNameSize);
     employeeNameBits.in <== inEmployeeName;
@@ -112,6 +39,7 @@ template Main() {
     component amountBits = Num2Bits(amountSize);
     amountBits.in <== inAmount;
 
+    //// Connect the components bits into a big bit signal    
     var tupleSize = employerNameSize + employeeNameSize + amountSize;
     component tupleBits2Num = Bits2Num(tupleSize);
 
@@ -148,10 +76,19 @@ template Main() {
 
     // check that the fintech transaction tuple is correcty signed
     component signatureVerifier = EdDSAVerifier(tupleSize);
-    signatureVerifier.msg <== msgBits.out;         // tuple      (tupleSize bits)
-    signatureVerifier.A <== signatureABits.out;    // bank public key  (256 bits)
-    signatureVerifier.R8 <== signatureR8Bits.out;  // signature R part (256 bits)
-    signatureVerifier.S <== signatureSBits.out;    // signature S part (256 bits)
+
+    for (var i=0; i<tupleSize; i++) { // tuple
+        signatureVerifier.msg[i] <== msgBits.out[i];
+    }
+    for (var i=0; i<256; i++) { // public key
+        signatureVerifier.A[i] <== signatureABits.out[i];
+    }
+    for (var i=0; i<256; i++) { // signature (R part)
+        signatureVerifier.R8[i] <== signatureR8Bits.out[i];
+    }
+    for (var i=0; i<256; i++) { // signature (S part)
+        signatureVerifier.S[i] <== signatureSBits.out[i];
+    }
 }
 
 component main = Main();
