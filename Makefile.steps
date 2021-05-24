@@ -1,7 +1,7 @@
 all: compile setup
 
 compile:
-	node build/compile.js -i zkurrate/circuits/zkurrate.circom -o zkurrate/circuits/zkurrate.json -r
+	node --unhandled-rejections=strict zkurrate/src/compile.js -i zkurrate/circuits/zkurrate.circom -o zkurrate/circuits/zkurrate.json -r
 
 setup:
 	mkdir -p zkurrate/setup && \

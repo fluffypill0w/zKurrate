@@ -39,14 +39,16 @@ COPY package.json .
 
 RUN yarn install
 
-COPY tsconfig.json .
+#COPY tsconfig.json .
 
-RUN npm install -g typescript
+#RUN npm install -g typescript
 
-RUN npm i --save-dev @types/node
+#RUN npm i --save-dev @types/node
+
+#RUN npm i --save-dev @types/argparse argparse ffjavascript
 
 COPY zkurrate/ /zkurrate/zkurrate
 
-RUN tsc
+#RUN tsc
 
 RUN ln -s /zKurrate/Makefile.steps makefile
