@@ -3,9 +3,7 @@ const path = require("path");
 
 const tester = require("circom").tester;
 
-const curve = require("ffjavascript").bn128.buildBn128(false);
-
-const Fr = curve.Fr;
+//const Fr = require("ffjavascript").bn128.Fr;
 
 const assert = chai.assert;
 
@@ -19,12 +17,15 @@ describe("My test", function () {
         const circuit = await tester(path.join(__dirname, "", "zkurrate.circom"));
         await circuit.loadConstraints();
 
+        //const testInput = inArray[104, 105];
+
         assert.equal(circuit.nVars, 18);
         assert.equal(circuit.constraints.length, 34);
 
-        const witness = await circuit.calculateWitness({ "inArray": ["104", "105"]}, true);
+        //const witness = await circuit.calculateWitness(testInput);
+        const witness = await circuit.calculateWitness({ "inArray": "104"}, true);
 
-        assert(Fr.eq(witness[0],Fr.e(1)));
-       // assert(witness[1] == "105");
+        //assert(Fr.eq(witness[0], Fr.e(1)));
+         assert(witness[0] == "104");
     });
 });
