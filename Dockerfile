@@ -26,19 +26,7 @@ FROM node:12-buster
 
 RUN apt-get update && apt-get install -y yarn make g++ vim less 
 
-RUN npm install -g circom
-RUN npm install -g snarkjs
-
 WORKDIR zKurrate
-
-COPY circuits/compiler_test.circom circuit.circom
-
-RUN circom circuit.circom --fast --verbose --r1cs circuit.r1cs --wasm circuit.wasm --sym circuit.sym
-RUN snarkjs r1cs info circuit.r1cs
-RUN snarkjs r1cs print circuit.r1cs circuit.sym
-RUN snarkjs r1cs export json circuit.r1cs circuit.r1cs.json
-
-RUN rm circuit.circom circuit.r1cs
 
 COPY .bashrc /root
 
@@ -54,6 +42,8 @@ RUN yarn install
 COPY tsconfig.json .
 
 RUN npm install -g typescript
+
+RUN npm i --save-dev @types/node
 
 COPY zkurrate/ /zkurrate/zkurrate
 
