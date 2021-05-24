@@ -61,8 +61,11 @@ const main = async function() {
     const proofOutput = args.proof_output
     const publicSignalsOutput = args.signals_output
 
+    var h = 104;
+    var i = 105;
+
     const testCase = {
-        "inArray": ["104"]   // <------------ example data we want to try on the circuit
+        "inArray": [stringifyBigInts((h << (8*0))+ (i << (8*1)))]   // <------------ example data we want to try on the circuit ('hi')
     }
 
     const testInput = { // <--------------------------------------- example data embbedded in some object named testInput
