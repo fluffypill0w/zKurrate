@@ -82,7 +82,8 @@ const main = async function() {
     console.log(new Date(), 'Calculating witness')
     const witness = circuit.calculateWitness(testInput) //  <-------------------------- compile the witness from the testInput (example data)
     console.log('My input inArray:', testInput.inArray)
-    console.log('Is equal calculated by circuit:', witness[circuit.getSignalIdx('main.z')])
+    console.log('witness inArray:', witness[circuit.getSignalIdx('main.inArray')])
+    console.log('witness out:', witness[circuit.getSignalIdx('main.out')])
 
     console.log(new Date(), 'Generating proof')
     const {proof, publicSignals} = snarkjs.groth.genProof(provingKey, witness); // <--------------- use the witness (example data in binary format) and the provingKey 
