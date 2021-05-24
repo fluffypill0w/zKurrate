@@ -35,6 +35,8 @@ RUN mkdir -p zkurrate/setup && \
   -pk zkurrate/setup/zkurrate.pk.json \
   -vk zkurrate/setup/zkurrate.vk.json -r
 
+# create a witness from some input data (embbedded in the generateproof_zkurrate.js file as example)
+# and use it to make a proof
 RUN mkdir -p zkurrate/proofs zkurrate/signals && \
   node build/mastermind/src/generateproof_zkurrate.js \
   -c zkurrate/circuits/zkurrate.json \

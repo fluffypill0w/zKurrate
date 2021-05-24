@@ -62,31 +62,11 @@ const main = async function() {
     const publicSignalsOutput = args.signals_output
 
     const testCase = {
-        "guess": [1, 2, 2, 1],
-        "soln":  [2, 2, 1, 2],
-        "somethingA": 2,
-        "somethingB": 1,
+        "inArray": ["104"]   // <------------ example data we want to try on the circuit
     }
 
-    const soln = genSolnInput(testCase.soln)
-    const saltedSoln = soln.add(genSalt())
-    const hashedSoln = pedersenHash(saltedSoln)
-
-    const testInput = {
-        pubSomethingA: testCase.somethingA.toString(),
-        pubSomethingB: testCase.somethingB.toString(),
-
-        pubSolnHash: hashedSoln.encodedHash.toString(),
-        privSaltedSoln: saltedSoln.toString(),
-
-        pubGuessA: testCase.guess[0],
-        pubGuessB: testCase.guess[1],
-        pubGuessC: testCase.guess[2],
-        pubGuessD: testCase.guess[3],
-        privSolnA: testCase.soln[0],
-        privSolnB: testCase.soln[1],
-        privSolnC: testCase.soln[2],
-        privSolnD: testCase.soln[3],
+    const testInput = { // <--------------------------------------- example data embbedded in some object named testInput
+        inArray: testCase.inArray.toString(),
     }
 
     const provingKey = unstringifyBigInts(JSON.parse(readFileSync(provingKeyInput, "utf8")))
@@ -97,12 +77,13 @@ const main = async function() {
     const circuit = new snarkjs.Circuit(circuitDef)
 
     console.log(new Date(), 'Calculating witness')
-    const witness = circuit.calculateWitness(testInput)
-    console.log('Hash calculated by JS     :', testInput.pubSolnHash)
-    console.log('Hash calculated by circuit:', witness[circuit.getSignalIdx('main.solnHashOut')])
+    const witness = circuit.calculateWitness(testInput) //  <-------------------------- compile the witness from the testInput (example data)
+    console.log('My input inArray:', testInput.inArray)
+    console.log('Is equal calculated by circuit:', witness[circuit.getSignalIdx('main.z')])
 
     console.log(new Date(), 'Generating proof')
-    const {proof, publicSignals} = snarkjs.groth.genProof(provingKey, witness);
+    const {proof, publicSignals} = snarkjs.groth.genProof(provingKey, witness); // <--------------- use the witness (example data in binary format) and the provingKey 
+                                                                                //                  to create a proof and the signals (example data stripped from secrets) 
     writeFileSync(
         proofOutput,
         JSON.stringify(stringifyBigInts(proof)),
