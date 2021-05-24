@@ -39,13 +39,13 @@ template Main() {
     component amountBits = Num2Bits(amountSize);
     amountBits.in <== inAmount;
 
-    //// Connect the components bits into a big bit signal    
+    //// Connect the components bits into a big number ...
     var tupleSize = employerNameSize + employeeNameSize + amountSize;
     component tupleBits2Num = Bits2Num(tupleSize);
 
     var offset = 0;
     for (var i=0; i<employerNameSize; i++) {
-        tupleBits2Num.in[i] <== employerNameBits.out[i];
+        tupleBits2Num.in[offset + i] <== employerNameBits.out[i];
     }
     offset = offset + employerNameSize;
 
@@ -59,15 +59,17 @@ template Main() {
     }
 
     signal tupleNum;
-    
     tupleNum <== tupleBits2Num.out;
 
+    //// ... and convert back to a big bit array
     component msgBits = Num2Bits(tupleSize);
     msgBits.in <== tupleNum;
 
+    //// Convert to bit array the public key
     component signatureABits = Num2Bits(256);
     signatureABits.in <== inBankPublicKey;
 
+    //// Convert to bit array the signature parts
     component signatureR8Bits = Num2Bits(256);
     signatureR8Bits.in <== inSignatureLSB;
 
