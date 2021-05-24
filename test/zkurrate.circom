@@ -1,6 +1,7 @@
 //include "circomlib/circuits/babyjub.circom";
 //include "../../node_modules/circomlib/circuits/pedersen.circom";
 include "../../node_modules/circomlib/circuits/bitify.circom"; // TODO: remove?
+include "../../node_modules/ffjavascript/src/scalar.js";
 
 //var pubEmployerNameSignalSize = 16*8;
 
