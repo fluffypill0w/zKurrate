@@ -1,9 +1,8 @@
-"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const argparse = require("argparse");
 const compile = require("circom");
 const tester = require("circom").tester;
-const compiler = require("../node_modules/circom/src/compiler.js");
+const compiler = require("../../node_modules/circom/src/compiler.js");
 const path = require("path");
 const Scalar = require("ffjavascript").Scalar;
 
@@ -13,9 +12,9 @@ const main = async () => {
     const parser = new argparse.ArgumentParser({
         description: 'Compile the zk-SNARK circuit'
     });
-    parser.add_argument(['-i', '--input'], { help: 'the .circom source file' });
-    parser.add_argument(['-o', '--output'], { help: 'the .json output file' });
-    parser.add_argument(['-r', '--overwrite'], {
+    parser.addArgument(['-i', '--input'], { help: 'the .circom source file' });
+    parser.addArgument(['-o', '--output'], { help: 'the .json output file' });
+    parser.addArgument(['-r', '--overwrite'], {
         help: 'overwrite the output file',
         defaultValue: false,
         storeTrue: true,

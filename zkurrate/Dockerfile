@@ -13,32 +13,38 @@ RUN npm install scrypt --save
 RUN npm i
 RUN yarn install 
 RUN npm install -g typescript
+
+# horrible hack to inject our code in their build setup
+COPY src/generateproof_zkurrate.ts src/generateproof_zkurrate.ts
+
 RUN tsc
 
 WORKDIR /zkmm
 
 COPY . zkurrate
 
+# generate r1cs representation of circuit
 RUN node build/mastermind/src/compile.js \
   -i zkurrate/circuits/zkurrate.circom \
   -o zkurrate/circuits/zkurrate.json -r
 
-RUN mkdir -p mastermind/setup && \
+# setup: obtain the proof key and the verification key
+RUN mkdir -p zkurrate/setup && \
   node build/mastermind/src/trustedsetup.js \
-  -i mastermind/circuits/mastermind.json \
-  -pk mastermind/setup/mastermind.pk.json \
-  -vk mastermind/setup/mastermind.vk.json -r
+  -i zkurrate/circuits/zkurrate.json \
+  -pk zkurrate/setup/zkurrate.pk.json \
+  -vk zkurrate/setup/zkurrate.vk.json -r
 
-RUN mkdir -p mastermind/proofs mastermind/signals && \
-  node build/mastermind/src/generateproof.js \
-  -c mastermind/circuits/mastermind.json \
-  -vk mastermind/setup/mastermind.vk.json \
-  -pk mastermind/setup/mastermind.pk.json \
-  -po mastermind/proofs/mastermind.proof.json \
-  -so mastermind/signals/testsignals.json
+RUN mkdir -p zkurrate/proofs zkurrate/signals && \
+  node build/mastermind/src/generateproof_zkurrate.js \
+  -c zkurrate/circuits/zkurrate.json \
+  -vk zkurrate/setup/zkurrate.vk.json \
+  -pk zkurrate/setup/zkurrate.pk.json \
+  -po zkurrate/proofs/zkurrate.proof.json \
+  -so zkurrate/signals/testsignals.json
 
-RUN node build/mastermind/src/test_js_verification.js \
-  -c mastermind/circuits/mastermind.json \
-  -vk mastermind/setup/mastermind.vk.json \
-  -p mastermind/proofs/mastermind.proof.json \
-  -s mastermind/signals/testsignals.json
+#RUN node build/mastermind/src/test_js_verification.js \
+#  -c mastermind/circuits/mastermind.json \
+#  -vk mastermind/setup/mastermind.vk.json \
+#  -p mastermind/proofs/mastermind.proof.json \
+#  -s mastermind/signals/testsignals.json
