@@ -11,7 +11,7 @@ zkmm-run:
 zkurrate: zkurrate-builder zkurrate-run 
 
 zkurrate-builder:
-	docker build -f zkurrate-docker/Dockerfile -t zkurrate_builder zkurrate
+	docker build -f zkurrate/Dockerfile -t zkurrate_builder zkurrate
 
 zkurrate-run:
 	docker run -it --rm --name zkurrate_builder -v $(PWD):/zKurrate:ro zkurrate_builder bash
