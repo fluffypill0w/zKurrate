@@ -17,9 +17,11 @@ RUN tsc
 
 WORKDIR /zkmm
 
+COPY . zkurrate
+
 RUN node build/mastermind/src/compile.js \
-  -i mastermind/circuits/mastermind.circom \
-  -o mastermind/circuits/mastermind.json -r
+  -i zkurrate/circuits/zkurrate.circom \
+  -o zkurrate/circuits/zkurrate.json -r
 
 RUN mkdir -p mastermind/setup && \
   node build/mastermind/src/trustedsetup.js \
