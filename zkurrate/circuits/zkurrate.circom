@@ -7,6 +7,7 @@ template Main() {
     signal input inEmployerName;
     signal input inAmount;
     signal input inBankPublicKey;
+    signal input inReviewIPFSHash;
 
     // Private inputs
     signal private input inEmployeeName;
@@ -16,6 +17,7 @@ template Main() {
 
     // Output
     signal output amountIsValid;
+    signal output outReviewIPFSHash;
 
     // Amount must be greater than 500
     component amountComparator = LessThan(32); // TODO: update to newest circom version to allow GreaterThan
@@ -91,6 +93,17 @@ template Main() {
     for (var i=0; i<256; i++) { // signature (S part)
         signatureVerifier.S[i] <== signatureSBits.out[i];
     }
+
+    // Pass the review IPFS hash as output
+    //
+    // The IPFS hash is 256 bits
+    // (see https://docs.ipfs.io/concepts/content-addressing/#content-addressing-and-cids)
+    // so its maximum value is lower than the zkSNARK prime used
+    // (see https://docs.circom.io/1.-an-introduction/background#signals-of-a-circuit)
+    // and we can pass it directly to output using an aux signal.
+    signal reviewIPFSHash;
+
+    outReviewIPFSHash <== reviewIPFSHash;
 }
 
 component main = Main();
