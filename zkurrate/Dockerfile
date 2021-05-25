@@ -37,16 +37,21 @@ RUN mkdir -p zkurrate/setup && \
 
 # create a witness from some input data (embbedded in the generateproof_zkurrate.js file as example)
 # and use it to make a proof
-RUN mkdir -p zkurrate/proofs zkurrate/signals && \
-  node build/mastermind/src/generateproof_zkurrate.js \
-  -c zkurrate/circuits/zkurrate.json \
-  -vk zkurrate/setup/zkurrate.vk.json \
-  -pk zkurrate/setup/zkurrate.pk.json \
-  -po zkurrate/proofs/zkurrate.proof.json \
-  -so zkurrate/signals/testsignals.json
+#RUN mkdir -p zkurrate/proofs zkurrate/signals && \
+#  node build/mastermind/src/generateproof_zkurrate.js \
+#  -c zkurrate/circuits/zkurrate.json \
+#  -vk zkurrate/setup/zkurrate.vk.json \
+#  -pk zkurrate/setup/zkurrate.pk.json \
+#  -po zkurrate/proofs/zkurrate.proof.json \
+#  -so zkurrate/signals/testsignals.json
 
 #RUN node build/mastermind/src/test_js_verification.js \
 #  -c mastermind/circuits/mastermind.json \
 #  -vk mastermind/setup/mastermind.vk.json \
 #  -p mastermind/proofs/mastermind.proof.json \
 #  -s mastermind/signals/testsignals.json
+
+RUN mkdir -p zkurrate/contracts && \
+  node build/mastermind/src/generateverifier.js \
+  -i zkurrate/setup/zkurrate.vk.json \
+  -o zkurrate/contracts/zkurrateverifier.sol -r
