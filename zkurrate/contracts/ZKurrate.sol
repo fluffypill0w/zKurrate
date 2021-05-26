@@ -1,8 +1,8 @@
-pragma solidity ^0.4.14;
+pragma solidity ^0.6.11;
 
 import "./ZKurrateVerifier.sol";
 
-contract ZKurrate is ZKurrateVerifier {
+contract ZKurrate is Verifier {
     
     struct employerReviews {
         uint256[] hashIPFS;
