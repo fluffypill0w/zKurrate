@@ -21,7 +21,9 @@ RUN tsc
 
 WORKDIR /zkmm
 
-COPY . zkurrate
+RUN mkdir zkurrate
+
+COPY circuits/zkurrate.circom zkurrate/circuits/zkurrate.circom
 
 # generate r1cs representation of circuit
 RUN node build/mastermind/src/compile.js \
