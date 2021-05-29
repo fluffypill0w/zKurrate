@@ -1,3 +1,4 @@
 .gitignore
 zkmm/
 garbage/
+*/build/

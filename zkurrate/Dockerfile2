@@ -1,0 +1,11 @@
+FROM node:12-buster
+
+RUN apt-get update && apt-get install -y yarn build-essential vim less git 
+
+RUN npm install -g circom
+RUN npm install -g snarkjs
+RUN npm install -g circomlib
+
+WORKDIR /zKurrate
+
+RUN ln -s Makefile.steps makefile

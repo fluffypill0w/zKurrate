@@ -1,6 +1,6 @@
-include "../../node_modules/circomlib/circuits/bitify.circom";
-include "../../node_modules/circomlib/circuits/comparators.circom";
-include "../../node_modules/circomlib/circuits/eddsa.circom";
+include "/usr/local/lib/node_modules/circomlib/circuits/bitify.circom";
+include "/usr/local/lib/node_modules/circomlib/circuits/comparators.circom";
+include "/usr/local/lib/node_modules/circomlib/circuits/eddsa.circom";
 
 template Main() {
     // Public inputs
