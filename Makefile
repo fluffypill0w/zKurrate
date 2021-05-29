@@ -28,9 +28,16 @@ BUILDPATH=zkurrate/build
 $(BUILDPATH)/%.r1cs: $(CIRCUITS)/%.circom
 	circom $< --r1cs $@
 
+$(BUILDPATH)/pot12_0000.ptau:
+	snarkjs powersoftau new bn128 12 $@ -v
 
+$(BUILDPATH)/pot12_0001.ptau: $(BUILDPATH)/pot12_0000.ptau
+	snarkjs powersoftau contribute $< $@ --name="First contribution" -v
 
 compile: $(BUILDPATH)/zkurrate.r1cs
+
+generic-setup: $(BUILDPATH)/pot12_0001.ptau
+
 
 clean:
 	rm $(BUILDPATH)/*
