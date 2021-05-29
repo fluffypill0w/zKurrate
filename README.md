@@ -9,4 +9,8 @@ A Unix environment with a recent version (circa 2021) of the following tools:
 
 ## Build
 
-Run `make` to prepare and enter a builder container with all the tools and code.
+Run `make zkurrate-builder` to prepare a builder container with all the tools.
+
+Run `make zkurrate-run` to run the container with the code mounted in `/zKurrate`.
+
+Inside the container, run `make default-setup-ptau verify-proof` to run all the circuit pipeline, generating the files at `zkurrate/build` directory (located `/zKurrate/zkurrate/build` inside the container).
