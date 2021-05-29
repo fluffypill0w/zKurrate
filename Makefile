@@ -1,4 +1,4 @@
-all: zkurrate zkmm
+all: compile
 
 zkmm: zkmm-builder zkmm-run
 
@@ -22,8 +22,15 @@ zkurrate2-builder:
 zkurrate2-run:
 	docker run -it --rm --name zkurrate2_builder -v $(PWD):/zKurrate zkurrate2_builder bash
 
-compile:
-	circom zkurrate/circuits/zkurrate.circom \
-	--r1cs zkurrate/build/zkurrate.r1cs   \
-	--wasm zkurrate/build/zkurrate.wasm   \
-	--sym  zkurrate/build/zkurrate.sym
+CIRCUITS=zkurrate/circuits
+BUILDPATH=zkurrate/build
+
+$(BUILDPATH)/%.r1cs: $(CIRCUITS)/%.circom
+	circom $< --r1cs $@
+
+
+
+compile: $(BUILDPATH)/zkurrate.r1cs
+
+clean:
+	rm $(BUILDPATH)/*
