@@ -37,81 +37,79 @@ CIRCUITS=zkurrate/circuits
 BUILDPATH=zkurrate/build
 RESOURCESPATH=zkurrate/resources
 
+###############################################################################
+# circuit compilation rules                                                   #
+###############################################################################
 # compile R1CS
 $(BUILDPATH)/$(CIRCUIT).r1cs: $(CIRCUITS)/$(CIRCUIT).circom
 	circom $< --r1cs $@
-
 # compile WASM
 $(BUILDPATH)/$(CIRCUIT).wasm: $(CIRCUITS)/$(CIRCUIT).circom
 	circom $< --wasm $@
-
-# phase 1: ptau new
-$(BUILDPATH)/pot$(PTAUPOWER)_0000.ptau:
-	snarkjs powersoftau new bn128 $(PTAUPOWER) $@ -v
-
-# phase 1: ptau contribute
-$(BUILDPATH)/pot$(PTAUPOWER)_0001.ptau: $(BUILDPATH)/pot$(PTAUPOWER)_0000.ptau
-	snarkjs powersoftau contribute $< $@ --name="First contribution" -v
-
-# phase 1: ptau prepare
-$(BUILDPATH)/pot$(PTAUPOWER)_final.ptau: $(BUILDPATH)/pot$(PTAUPOWER)_0001.ptau
-	snarkjs powersoftau prepare phase2 $< $@ -v
-
-# phase 2: zkey new
-$(BUILDPATH)/$(CIRCUIT)_0000.zkey: $(BUILDPATH)/$(CIRCUIT).r1cs $(BUILDPATH)/$(CIRCUIT).ptau
-	snarkjs zkey new $^ $@
-
-# phase 2: zkey contribute
-$(BUILDPATH)/$(CIRCUIT)_final.zkey: $(BUILDPATH)/$(CIRCUIT)_0000.zkey
-	snarkjs zkey contribute $< $@ --name="1st Contributor Name" -v
-
-# phase 2: zkey export
-$(BUILDPATH)/$(CIRCUIT)_verification_key.json: $(BUILDPATH)/$(CIRCUIT)_final.zkey
-	snarkjs zkey export verificationkey $< $@
-
-compile: $(BUILDPATH)/$(CIRCUIT).r1cs
-
+# circuit info
 $(BUILDPATH)/$(CIRCUIT).info: $(BUILDPATH)/$(CIRCUIT).r1cs
 	snarkjs info -c $< > $@
-
+# circuit power (~size)
 $(BUILDPATH)/$(CIRCUIT).power: $(BUILDPATH)/$(CIRCUIT).info
 	zkurrate/src/calculate_ptau_power.sh $< | tee > $(BUILDPATH)/$(CIRCUIT).power
-
-$(BUILDPATH)/$(CIRCUIT).wtns: $(BUILDPATH)/$(CIRCUIT).wasm $(RESOURCESPATH)/$(CIRCUIT).input
-	snarkjs wtns calculate $^ $@
-
-$(BUILDPATH)/$(CIRCUIT)_proof.json: $(BUILDPATH)/$(CIRCUIT)_final.zkey $(BUILDPATH)/$(CIRCUIT).wtns
-	snarkjs groth16 prove $(BUILDPATH)/$(CIRCUIT)_final.zkey $(BUILDPATH)/$(CIRCUIT).wtns $(BUILDPATH)/$(CIRCUIT)_proof.json $(BUILDPATH)/$(CIRCUIT)_public.json
-
-$(BUILDPATH)/$(CIRCUIT)_public.json: $(BUILDPATH)/$(CIRCUIT)_final.zkey $(BUILDPATH)/$(CIRCUIT).wtns
-	snarkjs groth16 prove $(BUILDPATH)/$(CIRCUIT)_final.zkey $(BUILDPATH)/$(CIRCUIT).wtns $(BUILDPATH)/$(CIRCUIT)_proof.json $(BUILDPATH)/$(CIRCUIT)_public.json 
-
-generate-proof: $(BUILDPATH)/$(CIRCUIT)_proof.json
-
-verify-proof: $(BUILDPATH)/$(CIRCUIT)_verification_key.json $(BUILDPATH)/$(CIRCUIT)_public.json $(BUILDPATH)/$(CIRCUIT)_proof.json
-	snarkjs groth16 verify $^
-
+# targets
+compile: $(BUILDPATH)/$(CIRCUIT).r1cs
 circuit-info: $(BUILDPATH)/$(CIRCUIT).power
 	cat $(BUILDPATH)/$(CIRCUIT).info
 	cat $(BUILDPATH)/$(CIRCUIT).power
 
+################################################################################
+# setup related rules                                                          #
+################################################################################
+# phase 1: ptau new
+$(BUILDPATH)/pot$(PTAUPOWER)_0000.ptau:
+	snarkjs powersoftau new bn128 $(PTAUPOWER) $@ -v
+# phase 1: ptau contribute
+$(BUILDPATH)/pot$(PTAUPOWER)_0001.ptau: $(BUILDPATH)/pot$(PTAUPOWER)_0000.ptau
+	snarkjs powersoftau contribute $< $@ --name="First contribution" -v
+# phase 1: ptau prepare
+$(BUILDPATH)/pot$(PTAUPOWER)_final.ptau: $(BUILDPATH)/pot$(PTAUPOWER)_0001.ptau
+	snarkjs powersoftau prepare phase2 $< $@ -v
+# phase 2: zkey new
+$(BUILDPATH)/$(CIRCUIT)_0000.zkey: $(BUILDPATH)/$(CIRCUIT).r1cs $(BUILDPATH)/$(CIRCUIT).ptau
+	snarkjs zkey new $^ $@
+# phase 2: zkey contribute
+$(BUILDPATH)/$(CIRCUIT)_final.zkey: $(BUILDPATH)/$(CIRCUIT)_0000.zkey
+	snarkjs zkey contribute $< $@ --name="1st Contributor Name" -v
+# phase 2: zkey export
+$(BUILDPATH)/$(CIRCUIT)_verification_key.json: $(BUILDPATH)/$(CIRCUIT)_final.zkey
+	snarkjs zkey export verificationkey $< $@
+# targets
 setup-ptau-generate: $(BUILDPATH)/pot$(PTAUPOWER)_final.ptau
 	ln -sf pot$(PTAUPOWER)_final.ptau $(BUILDPATH)/$(CIRCUIT).ptau
-
 setup-ptau-downloaded: $(RESOURCESPATH)/powersOfTau28_hez_final_$(PTAUPOWER).ptau
 	ln -sf $(PWD)/$(RESOURCESPATH)/powersOfTau28_hez_final_$(PTAUPOWER).ptau $(BUILDPATH)/$(CIRCUIT).ptau
-
 default-setup-ptau: setup-ptau-generate
-
 setup-zkey: $(BUILDPATH)/$(CIRCUIT)_verification_key.json
-
 verify-ptau: $(BUILDPATH)/pot$(PTAUPOWER)_final.ptau $(BUILDPATH)/$(CIRCUIT).r1cs $(BUILDPATH)/$(CIRCUIT)_final.zkey
 	snarkjs powersoftau verify $<
 	snarkjs zkey verify $(BUILDPATH)/$(CIRCUIT).r1cs $< $(BUILDPATH)/$(CIRCUIT)_final.zkey
 
+################################################################################
+# proof generation and verification test rules                                 #
+################################################################################
+# generate a witness
+$(BUILDPATH)/$(CIRCUIT).wtns: $(BUILDPATH)/$(CIRCUIT).wasm $(RESOURCESPATH)/$(CIRCUIT).input
+	snarkjs wtns calculate $^ $@
+# generate a proof: proof part
+$(BUILDPATH)/$(CIRCUIT)_proof.json: $(BUILDPATH)/$(CIRCUIT)_final.zkey $(BUILDPATH)/$(CIRCUIT).wtns
+	snarkjs groth16 prove $(BUILDPATH)/$(CIRCUIT)_final.zkey $(BUILDPATH)/$(CIRCUIT).wtns $(BUILDPATH)/$(CIRCUIT)_proof.json $(BUILDPATH)/$(CIRCUIT)_public.json
+# generate a proof: public part
+$(BUILDPATH)/$(CIRCUIT)_public.json: $(BUILDPATH)/$(CIRCUIT)_final.zkey $(BUILDPATH)/$(CIRCUIT).wtns
+	snarkjs groth16 prove $(BUILDPATH)/$(CIRCUIT)_final.zkey $(BUILDPATH)/$(CIRCUIT).wtns $(BUILDPATH)/$(CIRCUIT)_proof.json $(BUILDPATH)/$(CIRCUIT)_public.json 
+# targets
 witness: $(BUILDPATH)/$(CIRCUIT).wtns
+generate-proof: $(BUILDPATH)/$(CIRCUIT)_proof.json
+verify-proof: $(BUILDPATH)/$(CIRCUIT)_verification_key.json $(BUILDPATH)/$(CIRCUIT)_public.json $(BUILDPATH)/$(CIRCUIT)_proof.json
+	snarkjs groth16 verify $^
 
-.PHONY: circuit-info setup-ptau-generate setup-ptau-downloaded default-setup-ptau setup-zkey verify-ptau clean
+# Phony targets
+.PHONY: compile circuit-info setup-ptau-generate setup-ptau-downloaded default-setup-ptau setup-zkey verify-ptau witness generate-proof verify-proof clean
 
 clean:
 	rm -f $(BUILDPATH)/*
