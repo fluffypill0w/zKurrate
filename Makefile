@@ -141,8 +141,14 @@ $(BUILDPATH)/review.hash: $(RESOURCESPATH)/review.txt
 ipfs-hash: $(BUILDPATH)/review.hash
 	cat $<
 
+zkurrate/node_modules:
+	cd zkurrate && npm install
+
+test: | zkurrate/node_modules
+	cd zkurrate && npm test
+
 # Phony targets
-.PHONY: compile circuit-info setup-ptau-generate setup-ptau-download setup-ptau-default setup-zkey verify-ptau witness generate-proof verify-proof clean solidity-verifier solidity-calldata solidity
+.PHONY: compile circuit-info setup-ptau-generate setup-ptau-download setup-ptau-default setup-zkey verify-ptau witness generate-proof verify-proof clean solidity-verifier solidity-calldata solidity test
 
 clean:
 	rm -f $(BUILDPATH)/*

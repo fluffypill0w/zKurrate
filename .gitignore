@@ -1,4 +1,5 @@
 .gitignore
+zkurrate/node_modules
 zkmm/
 garbage/
 */build/
