@@ -7,8 +7,6 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import HeaderLogo from '../AppLogo';
 
-import SearchBox from './Components/SearchBox';
-
 class Header extends React.Component {
     render() {
         let {
@@ -33,9 +31,6 @@ class Header extends React.Component {
                         "app-header__content",
                         {'header-mobile-open': enableMobileMenuSmall},
                     )}>
-                        <div className="app-header-left">
-                            <SearchBox/>
-                        </div>
                     </div>
                 </ReactCSSTransitionGroup>
             </Fragment>

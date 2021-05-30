@@ -7969,8 +7969,8 @@ button,
   align-items: center;
   transition: width .2s; }
   .app-header__logo .logo-src {
-    height: 23px;
-    width: 97px;
+    height: 25px;
+    width: 138px;
     background: url("~assets/utils/images/logo-inverse.png"); }
 
 .app-header__menu,

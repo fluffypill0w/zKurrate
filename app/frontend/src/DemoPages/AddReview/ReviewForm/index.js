@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { Link } from 'react-router-dom';
 import {
     Col, Card, CardBody,
     CardTitle, Button, Form, FormGroup, Label, Input, FormText
@@ -37,7 +38,8 @@ export default class ReviewForm extends React.Component {
                                 <FormGroup row>
                                     <Label for="bank" sm={2}>Bank</Label>
                                     <Col sm={10}>
-                                        <Input type="select" name="selectBank" id="selectBank"/> 
+                                    <Input type="text" name="bankName" id="bankName"
+                                               placeholder=""/>
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
@@ -48,7 +50,7 @@ export default class ReviewForm extends React.Component {
                                 </FormGroup>
                                 <FormGroup check row>
                                     <Col sm={{size: 30, offset: 0}}>
-                                    <Button className="mb-2 mr-2 btn-hover-shine" color="primary">Submit</Button>
+                                    <Button className="mb-2 mr-2 btn-hover-shine" color="light"><Link to={"../../review-added"}>Submit</Link></Button>
                                     </Col>
                                 </FormGroup>
                             </Form>

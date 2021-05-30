@@ -25,12 +25,12 @@ const renderApp = Component => {
 
 renderApp(Main);
 
-if (module.hot) {
-  module.hot.accept('./DemoPages/Main', () => {
-    const NextApp = require('./DemoPages/Main').default;
-    renderApp(NextApp);
-  });
-}
+//if (module.hot) {
+//  module.hot.accept('./DemoPages/Main', () => {
+//    const NextApp = require('./DemoPages/Main').default;
+//    renderApp(NextApp);
+//  });
+//}
 unregister();
 
 // registerServiceWorker();

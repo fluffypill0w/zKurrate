@@ -2,8 +2,10 @@ import React, {Fragment} from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {
     Col, Card, CardBody,
-    CardTitle, Button, Form, FormGroup, Label, Input, FormText
+    CardTitle, Button, Form, FormGroup, Label, Input
 } from 'reactstrap';
+
+import {Link} from "react-router-dom";
 
 export default class ReadReviewForm extends React.Component {
     render() {
@@ -29,7 +31,7 @@ export default class ReadReviewForm extends React.Component {
                                 </FormGroup>
                                 <FormGroup check row>
                                     <Col sm={{size: 30, offset: 0}}>
-                                    <Button className="mb-2 mr-2 btn-hover-shine" color="primary">Search</Button>
+                                    <Button className="mb-2 mr-2 btn-hover-shine" color="light"><Link to={"../../return-search"}>Search</Link></Button>
                                     </Col>
                                 </FormGroup>
                             </Form>
