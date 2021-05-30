@@ -48,7 +48,7 @@ export default class ReviewForm extends React.Component {
                                 </FormGroup>
                                 <FormGroup check row>
                                     <Col sm={{size: 30, offset: 0}}>
-                                        <Button>Submit</Button>
+                                    <Button className="mb-2 mr-2 btn-hover-shine" color="primary">Submit</Button>
                                     </Col>
                                 </FormGroup>
                             </Form>

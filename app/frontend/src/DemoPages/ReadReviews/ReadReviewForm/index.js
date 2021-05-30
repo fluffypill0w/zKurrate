@@ -29,7 +29,7 @@ export default class ReadReviewForm extends React.Component {
                                 </FormGroup>
                                 <FormGroup check row>
                                     <Col sm={{size: 30, offset: 0}}>
-                                        <Button>Submit</Button>
+                                    <Button className="mb-2 mr-2 btn-hover-shine" color="primary">Search</Button>
                                     </Col>
                                 </FormGroup>
                             </Form>
