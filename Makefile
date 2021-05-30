@@ -127,6 +127,8 @@ remixd-start:
 
 ipfs-start:
 	mkdir -p /zKurrate/zkurrate/build
+	jsipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\"*\"]"
+	jsipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\"true\"]"
 	nohup jsipfs daemon --offline > /zKurrate/zkurrate/build/jsipfs.log &
 
 $(BUILDPATH)/review.hash: $(RESOURCESPATH)/review.txt
