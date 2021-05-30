@@ -129,6 +129,12 @@ ipfs-start:
 	mkdir -p /zKurrate/zkurrate/build
 	nohup jsipfs daemon --offline > /zKurrate/zkurrate/build/jsipfs.log &
 
+$(BUILDPATH)/review.hash: $(RESOURCESPATH)/review.txt
+	jsipfs add --only-hash --quiet $< > $@
+
+ipfs-hash: $(BUILDPATH)/review.hash
+	cat $<
+
 # Phony targets
 .PHONY: compile circuit-info setup-ptau-generate setup-ptau-download setup-ptau-default setup-zkey verify-ptau witness generate-proof verify-proof clean solidity-verifier solidity-calldata solidity
 
