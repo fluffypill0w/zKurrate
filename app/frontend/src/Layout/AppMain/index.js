@@ -5,16 +5,9 @@ import {
     ToastContainer,
 } from 'react-toastify';
 
-const Dashboards = lazy(() => import('../../DemoPages/Dashboards'));
-
 const AddReview = lazy(() => import('../../DemoPages/AddReview'));
 const ReadReviews = lazy(() => import('../../DemoPages/ReadReviews'));
-const Widgets = lazy(() => import('../../DemoPages/Widgets'));
-const Elements = lazy(() => import('../../DemoPages/Elements'));
-const Components = lazy(() => import('../../DemoPages/Components'));
-const Charts = lazy(() => import('../../DemoPages/Charts'));
-const Forms = lazy(() => import('../../DemoPages/Forms'));
-const Tables = lazy(() => import('../../DemoPages/Tables'));
+const SiteHome = lazy(() => import('../../DemoPages/SiteHome'));
 
 const AppMain = () => {
 
@@ -127,7 +120,7 @@ const AppMain = () => {
                 <Route path="/elements" component={Elements}/>
             </Suspense>
 
-            {/* Dashboard Widgets */}
+            {/* Home */}
 
             <Suspense fallback={
                 <div className="loader-container">
@@ -139,26 +132,11 @@ const AppMain = () => {
                     </div>
                 </div>
             }>
-                <Route path="/widgets" component={Widgets}/>
-            </Suspense>
-
-            {/* Dashboards */}
-
-            <Suspense fallback={
-                <div className="loader-container">
-                    <div className="loader-container-inner">
-                        <h6 className="mt-3">
-                            Please wait while we load all the Dashboards examples
-                            <small>Because this is a demonstration, we load at once all the Dashboards examples. This wouldn't happen in a real live app!</small>
-                        </h6>
-                    </div>
-                </div>
-            }>
-                <Route path="/dashboards" component={Dashboards}/>
+                <Route path="/home" component={SiteHome}/>
             </Suspense>
 
             <Route exact path="/" render={() => (
-                <Redirect to="/dashboards/basic"/>
+                <Redirect to="/home"/>
             )}/>
             <ToastContainer/>
         </Fragment>

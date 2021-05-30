@@ -2,7 +2,7 @@ export const MainNav = [
     {
         icon: 'pe-7s-star',
         label: 'Home',
-        to: '#/dashboards/basic',
+        to: '#/home',
     },
 ];
 

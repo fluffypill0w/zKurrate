@@ -1,17 +1,17 @@
 import React, {Fragment} from 'react';
 import {Route} from 'react-router-dom';
 
-// Review Form
+// Home
 
-import ReviewForm from './ReviewForm';
+import SiteHome from './zkurrateHome';
 
 // Layout
 
-import AppHeader from '../../Layout/AppHeader/';
-import AppSidebar from '../../Layout/AppSidebar/';
-import AppFooter from '../../Layout/AppFooter/';
+import AppHeader from '../../Layout/AppHeader';
+import AppSidebar from '../../Layout/AppSidebar';
+import AppFooter from '../../Layout/AppFooter';
 
-const Reviews = ({match}) => (
+const ZkurrateHome = ({match}) => (
     <Fragment>
         <AppHeader/>
         <div className="app-main">
@@ -21,7 +21,7 @@ const Reviews = ({match}) => (
 
                     {/* Home */}
 
-                    <Route path={`${match.url}/form`} component={ReviewForm}/>
+                    <Route path={`${match.url}`} component={SiteHome}/>
                 </div>
                 <AppFooter/>
             </div>
@@ -29,4 +29,4 @@ const Reviews = ({match}) => (
     </Fragment>
 );
 
-export default Reviews;
+export default ZkurrateHome;
