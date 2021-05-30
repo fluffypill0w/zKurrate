@@ -19,25 +19,27 @@ template Main() {
     signal output amountIsValid;
     signal output outReviewIPFSHash;
 
-    // Amount must be greater than 500
-    component amountComparator = LessThan(32); // TODO: update to newest circom version to allow GreaterThan
-    amountComparator.in[0] <== 500;
-    amountComparator.in[1] <== inAmount;
+    // Parameters
+    var employerNameSize = 2*8;
+    var employeeNameSize = 2*8;
+    var amountSize = 8; // 8 bits (from 0 to 255) to reduce circuit size
+    var minAmount = 127;
 
+    // Amount must be greater than the minimum
+    component amountComparator = GreaterThan(amountSize);
+    amountComparator.in[0] <== inAmount;
+    amountComparator.in[1] <== minAmount;
     amountIsValid <== amountComparator.out;
 
     // Compose the tuple from the individual components
 
     //// Transform components to their bit representations
-    var employerNameSize = 2*8;
     component employerNameBits = Num2Bits(employerNameSize);
     employerNameBits.in <== inEmployerName;
-    
-    var employeeNameSize = 2*8;
+
     component employeeNameBits = Num2Bits(employeeNameSize);
     employeeNameBits.in <== inEmployeeName;
 
-    var amountSize = 32;
     component amountBits = Num2Bits(amountSize);
     amountBits.in <== inAmount;
 
