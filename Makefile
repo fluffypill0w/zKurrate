@@ -131,6 +131,10 @@ ipfs-start:
 	jsipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\"true\"]"
 	nohup jsipfs daemon --offline > /zKurrate/zkurrate/build/jsipfs.log &
 
+# ipfs shutdown apparently don't work
+ipfs-stop:
+	kill $(ps aux | grep ipfs | grep -v grep | awk '{print $2}')
+
 $(BUILDPATH)/review.hash: $(RESOURCESPATH)/review.txt
 	jsipfs add --only-hash --quiet $< > $@
 
