@@ -11,11 +11,11 @@ PTAUPOWER=8
 
 all: compile
 
-zkurrate2-builder:
-	docker build -f zkurrate/Dockerfile2 -t zkurrate2_builder zkurrate
+zkurrate-builder:
+	docker build -f zkurrate/Dockerfile -t zkurrate_builder zkurrate
 
-zkurrate2-run:
-	docker run -it --rm --name zkurrate2_builder -v $(PWD):/zKurrate zkurrate2_builder bash
+zkurrate-run:
+	docker run -it --rm --name zkurrate_builder -v $(PWD):/zKurrate zkurrate_builder bash
 
 frontend-builder:
 	docker build -f app/frontend/Dockerfile -t frontend_builder app/frontend
