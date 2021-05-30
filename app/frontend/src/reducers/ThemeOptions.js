@@ -1,4 +1,4 @@
-import sideBar6 from '../assets/utils/images/sidebar/abstract1.jpg';
+import sideBar6 from '../assets/utils/images/sidebar/logo_big.png';
 
 export const SET_ENABLE_BACKGROUND_IMAGE = 'THEME_OPTIONS/SET_ENABLE_BACKGROUND_IMAGE';
 
