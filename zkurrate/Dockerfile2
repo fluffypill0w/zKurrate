@@ -21,8 +21,6 @@ RUN npm install -g debug@4.3.1 ipfs
 
 WORKDIR /zKurrate
 
-RUN ln -s Makefile.steps makefile
-
 # remixd
 EXPOSE 65520/tcp
 
