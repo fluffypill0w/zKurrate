@@ -1,13 +1,13 @@
 {
-  "name": "architectui-react-theme-free",
+  "name": "zkurrate-frontend",
   "version": "1.1.1",
-  "homepage": "https://demo.dashboardpack.com/architectui-react-pro",
+  "homepage": "https://rockhame.github.io/zKurrate",
   "private": true,
-  "description": "ArchitectUI - Bootstrap 4 ReactJS Admin Dashboard Template FREE",
-  "author": "DashboardPack.com",
+  "description": "Frontend for https://github.com/fluffypill0w/zKurrate",
+  "author": "https://github.com/fluffypill0w",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DashboardPack/architectui-react-theme-free"
+    "url": "git+https://github.com/fluffypill0w/zKurrate"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
