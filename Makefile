@@ -121,6 +121,13 @@ $(BUILDPATH)/$(CIRCUIT)_calldata.json: $(BUILDPATH)/$(CIRCUIT)_public.json $(BUI
 solidity-verifier: $(BUILDPATH)/$(CIRCUIT)_verifier.sol
 solidity-calldata: $(BUILDPATH)/$(CIRCUIT)_calldata.json
 solidity: solidity-verifier solidity-calldata
+
+remixd-start:
+	remixd -s /zKurrate --remix-ide https://remix.ethereum.org
+
+ipfs-start:
+	nohup jsipfs daemon --offline &
+
 # Phony targets
 .PHONY: compile circuit-info setup-ptau-generate setup-ptau-download setup-ptau-default setup-zkey verify-ptau witness generate-proof verify-proof clean solidity-verifier solidity-calldata solidity
 
