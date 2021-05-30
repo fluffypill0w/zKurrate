@@ -39,6 +39,9 @@ frontend-builder:
 frontend-run:
 	docker run -it --rm --name frontend_builder -v $(PWD):/zKurrate -p 3000:3000/tcp frontend_builder bash
 
+frontend-run-build:
+	docker run -it --rm --name frontend_builder -v $(PWD):/zKurrate -p 3000:3000/tcp frontend_builder npm run build
+
 CIRCUITS=zkurrate/circuits
 BUILDPATH=zkurrate/build
 RESOURCESPATH=zkurrate/resources
