@@ -33,6 +33,12 @@ zkurrate2-builder:
 zkurrate2-run:
 	docker run -it --rm --name zkurrate2_builder -v $(PWD):/zKurrate zkurrate2_builder bash
 
+frontend-builder:
+	docker build -f app/frontend/Dockerfile -t frontend_builder app/frontend
+
+frontend-run:
+	docker run -it --rm --name frontend_builder -v $(PWD):/zKurrate frontend_builder bash
+
 CIRCUITS=zkurrate/circuits
 BUILDPATH=zkurrate/build
 RESOURCESPATH=zkurrate/resources
