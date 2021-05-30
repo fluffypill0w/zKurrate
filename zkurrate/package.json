@@ -1,0 +1,41 @@
+{
+  "name": "zkurrate",
+  "version": "0.0.1",
+  "description": "A dapp for anonymously reviewing employers which proves that all reviewers have been paid by the companies that they review.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --max-old-space-size=4000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fluffypill0w/zKurrate.git"
+  },
+  "keywords": [
+    "zksnarks",
+    "circom",
+    "ipfs"
+  ],
+  "author": "https://github.com/fluffypill0w",
+  "license": "GPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/fluffypill0w/zKurrate/issues"
+  },
+  "homepage": "https://github.com/fluffypill0w/zKurrate#readme",
+  "dependencies": {
+    "blake-hash": "^1.1.0",
+    "blake2b": "^2.1.3",
+    "circom": "0.5.33",
+    "circomlib": "0.5.2",
+    "ffjavascript": "0.1.0",
+    "web3-utils": "^1.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "ganache-cli": "^6.12.1",
+    "mocha": "^7.1.1",
+    "web3": "^1.3.0"
+  }
+}
