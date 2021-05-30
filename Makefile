@@ -108,8 +108,21 @@ generate-proof: $(BUILDPATH)/$(CIRCUIT)_proof.json
 verify-proof: $(BUILDPATH)/$(CIRCUIT)_verification_key.json $(BUILDPATH)/$(CIRCUIT)_public.json $(BUILDPATH)/$(CIRCUIT)_proof.json
 	snarkjs groth16 verify $^
 
+################################################################################
+# solidity code generation                                                     #
+################################################################################
+# solidity verifier
+$(BUILDPATH)/$(CIRCUIT)_verifier.sol: $(BUILDPATH)/$(CIRCUIT)_final.zkey
+	snarkjs zkey export solidityverifier $< $@
+# solidity call data
+$(BUILDPATH)/$(CIRCUIT)_calldata.json: $(BUILDPATH)/$(CIRCUIT)_public.json $(BUILDPATH)/$(CIRCUIT)_proof.json
+	snarkjs zkey export soliditycalldata $^ | tee > $(BUILDPATH)/$(CIRCUIT)_calldata.json
+# targets
+solidity-verifier: $(BUILDPATH)/$(CIRCUIT)_verifier.sol
+solidity-calldata: $(BUILDPATH)/$(CIRCUIT)_calldata.json
+solidity: solidity-verifier solidity-calldata
 # Phony targets
-.PHONY: compile circuit-info setup-ptau-generate setup-ptau-download setup-ptau-default setup-zkey verify-ptau witness generate-proof verify-proof clean
+.PHONY: compile circuit-info setup-ptau-generate setup-ptau-download setup-ptau-default setup-zkey verify-ptau witness generate-proof verify-proof clean solidity-verifier solidity-calldata solidity
 
 clean:
 	rm -f $(BUILDPATH)/*
