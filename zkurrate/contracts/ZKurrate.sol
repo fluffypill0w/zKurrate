@@ -1,6 +1,6 @@
 pragma solidity ^0.6.11;
 
-import "./ZKurrateVerifier.sol";
+import "../build/zkurrate_verifier.sol";
 
 contract ZKurrate is Verifier {
     
