@@ -84,7 +84,7 @@ setup-ptau-generate: $(BUILDPATH)/pot$(PTAUPOWER)_final.ptau
 	ln -sf pot$(PTAUPOWER)_final.ptau $(BUILDPATH)/$(CIRCUIT).ptau
 setup-ptau-downloaded: $(RESOURCESPATH)/powersOfTau28_hez_final_$(PTAUPOWER).ptau
 	ln -sf $(PWD)/$(RESOURCESPATH)/powersOfTau28_hez_final_$(PTAUPOWER).ptau $(BUILDPATH)/$(CIRCUIT).ptau
-default-setup-ptau: setup-ptau-generate
+setup-ptau-default: setup-ptau-generate
 setup-zkey: $(BUILDPATH)/$(CIRCUIT)_verification_key.json
 verify-ptau: $(BUILDPATH)/pot$(PTAUPOWER)_final.ptau $(BUILDPATH)/$(CIRCUIT).r1cs $(BUILDPATH)/$(CIRCUIT)_final.zkey
 	snarkjs powersoftau verify $<
@@ -109,7 +109,7 @@ verify-proof: $(BUILDPATH)/$(CIRCUIT)_verification_key.json $(BUILDPATH)/$(CIRCU
 	snarkjs groth16 verify $^
 
 # Phony targets
-.PHONY: compile circuit-info setup-ptau-generate setup-ptau-downloaded default-setup-ptau setup-zkey verify-ptau witness generate-proof verify-proof clean
+.PHONY: compile circuit-info setup-ptau-generate setup-ptau-downloaded setup-ptau-default setup-zkey verify-ptau witness generate-proof verify-proof clean
 
 clean:
 	rm -f $(BUILDPATH)/*
